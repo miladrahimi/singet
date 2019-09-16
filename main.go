@@ -69,8 +69,6 @@ func main() {
 			},
 
 			ModifyResponse: func(r *http.Response) error {
-				r.Header.Set("Access-Control-Allow-Origin", "*")
-
 				// Handle redirection responses
 				if location := r.Header.Get("Location"); location != "" {
 					if query.Get("follow") != "false" {
