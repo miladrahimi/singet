@@ -43,14 +43,14 @@ func main() {
 		// Parse the query string
 		queries, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
-			displayError(w, "Bad Request.")
+			displayError(w, "URL not found in the request query string")
 			return
 		}
 
 		// Get the target url
 		target, err := url.Parse(queries["url"][0])
 		if err != nil || target.IsAbs() == false {
-			displayError(w, "Bad Request.")
+			displayError(w, "The requested URL is invalid.")
 			return
 		}
 
@@ -92,7 +92,7 @@ func displayError(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	_, err := w.Write([]byte(message))
+	_, err := w.Write([]byte("Error: " + message))
 	if err != nil {
 		panic("Cannot respond to the request.")
 	}
