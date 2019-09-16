@@ -28,7 +28,6 @@ func main() {
 		proxyPort = DefaultPort
 	}
 
-	// Proxy URL
 	proxyUrl := proxyHost + ":" + proxyPort
 
 	// The favicon.ico
@@ -40,15 +39,9 @@ func main() {
 
 	// Proxy main route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Parse the query string
-		queries, err := url.ParseQuery(r.URL.RawQuery)
-		if err != nil {
-			displayError(w, "URL not found in the request query string")
-			return
-		}
+		query := r.URL.Query()
 
-		// Get the target url
-		target, err := url.Parse(queries["url"][0])
+		target, err := url.Parse(query.Get("url"))
 		if err != nil || target.IsAbs() == false {
 			displayError(w, "The requested URL is invalid.")
 			return
@@ -57,8 +50,12 @@ func main() {
 		// Make reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
-				// Pretend that the referrer is its homepage!
-				req.Header.Set("Referer", target.Scheme+"://"+target.Host+"/")
+				if referrer := query.Get("referrer"); referrer != "" {
+					req.Header.Set("Referer", referrer)
+				} else {
+					req.Header.Set("Referer", target.Scheme+"://"+target.Host+"/")
+				}
+
 				req.Header.Set("Origin", target.Host)
 				req.Host = target.Host
 				req.URL = target
@@ -71,18 +68,18 @@ func main() {
 
 				// Handle redirection responses
 				if response.Header.Get("Location") != "" {
-					response.Header.Set("Location", proxyUrl+"/?"+response.Header.Get("Location"))
+					if query.Get("follow") != "false" {
+						response.Header.Set("Location", proxyUrl+"/?url="+response.Header.Get("Location"))
+					}
 				}
 
 				return nil
 			},
 		}
 
-		// Handle request with reverse proxy
 		proxy.ServeHTTP(w, r)
 	})
 
-	// Log and listen to the web port
 	log.Println("Started: " + proxyUrl)
 	log.Fatal(http.ListenAndServe(":"+proxyPort, nil))
 }
