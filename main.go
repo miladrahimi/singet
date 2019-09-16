@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -8,6 +10,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"strconv"
 )
 
 const (
@@ -32,13 +35,15 @@ func main() {
 
 	// The favicon.ico
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		bytes, _ := ioutil.ReadFile("favicon.ico")
+		content, _ := ioutil.ReadFile("favicon.ico")
 		w.Header().Set("Content-Type", "image/x-icon")
-		_, _ = fmt.Fprintln(w, string(bytes))
+		_, _ = fmt.Fprintln(w, string(content))
 	})
 
 	// Proxy main route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
 		query := r.URL.Query()
 
 		target, err := url.Parse(query.Get("url"))
@@ -63,13 +68,15 @@ func main() {
 				log.Println(req)
 			},
 
-			ModifyResponse: func(response *http.Response) error {
-				response.Header.Set("Access-Control-Allow-Origin", "*")
+			ModifyResponse: func(r *http.Response) error {
+				r.Header.Set("Access-Control-Allow-Origin", "*")
 
 				// Handle redirection responses
-				if response.Header.Get("Location") != "" {
+				if location := r.Header.Get("Location"); location != "" {
 					if query.Get("follow") != "false" {
-						response.Header.Set("Location", proxyUrl+"/?url="+response.Header.Get("Location"))
+						r.Header.Set("Location", proxyUrl+"/?url="+r.Header.Get("Location"))
+					} else {
+						modifyResponseToRedirection(r, location)
 					}
 				}
 
@@ -87,10 +94,23 @@ func main() {
 // Create an error response
 func displayError(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusBadRequest)
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	_, err := w.Write([]byte("Error: " + message))
 	if err != nil {
 		panic("Cannot respond to the request.")
 	}
+}
+
+// Modify response to location
+func modifyResponseToRedirection(response *http.Response, location string) {
+	body, err := json.Marshal(map[string]string{"location": location})
+	if err != nil {
+		panic("Cannot respond to the request.")
+	}
+
+	response.Header.Set("Location", "")
+	response.Header.Set("Content-Type", "application/json")
+	response.Body = ioutil.NopCloser(bytes.NewReader(body))
+	response.ContentLength = int64(len(body))
+	response.Header.Set("Content-Length", strconv.Itoa(len(body)))
 }
