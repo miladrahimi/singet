@@ -46,6 +46,11 @@ func main() {
 
 		query := r.URL.Query()
 
+		if query.Get("url") == "" {
+			displayMessage(w, "Welcome!")
+			return
+		}
+
 		target, err := url.Parse(query.Get("url"))
 		if err != nil || target.IsAbs() == false {
 			displayError(w, "The requested URL is invalid.")
@@ -92,8 +97,20 @@ func main() {
 // Create an error response
 func displayError(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Set("Content-type", "text/plain")
 
 	_, err := w.Write([]byte("Error: " + message))
+	if err != nil {
+		panic("Cannot respond to the request.")
+	}
+}
+
+// Create an error response
+func displayMessage(w http.ResponseWriter, message string) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-type", "text/plain")
+
+	_, err := w.Write([]byte(message))
 	if err != nil {
 		panic("Cannot respond to the request.")
 	}
