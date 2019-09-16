@@ -40,8 +40,15 @@ func main() {
 
 	// Proxy main route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Parse requested url
-		target, err := url.Parse(r.URL.RawQuery)
+		// Parse the query string
+		queries, err := url.ParseQuery(r.URL.RawQuery)
+		if err != nil {
+			displayError(w, "Bad Request.")
+			return
+		}
+
+		// Get the target url
+		target, err := url.Parse(queries["url"][0])
 		if err != nil || target.IsAbs() == false {
 			displayError(w, "Bad Request.")
 			return
@@ -50,7 +57,7 @@ func main() {
 		// Make reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
-				// Pretent that the referrer is its homepage!
+				// Pretend that the referrer is its homepage!
 				req.Header.Set("Referer", target.Scheme+"://"+target.Host+"/")
 				req.Header.Set("Origin", target.Host)
 				req.Host = target.Host
