@@ -123,7 +123,9 @@ func modifyResponseToRedirection(response *http.Response, location string) {
 		panic("Cannot respond to the request.")
 	}
 
-	response.Header.Set("Location", "")
+	response.Status = "200 OK"
+	response.StatusCode = http.StatusOK
+	response.Header.Del("Location")
 	response.Header.Set("Content-Type", "application/json")
 	response.Body = ioutil.NopCloser(bytes.NewReader(body))
 	response.ContentLength = int64(len(body))
