@@ -28,11 +28,14 @@ func main() {
 		proxyPort = DefaultPort
 	}
 
+	// Proxy URL
 	proxyUrl := proxyHost + ":" + proxyPort
 
 	// The favicon.ico
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		displayFavicon(w)
+		bytes, _ := ioutil.ReadFile("favicon.ico")
+		w.Header().Set("Content-Type", "image/x-icon")
+		_, _ = fmt.Fprintln(w, string(bytes))
 	})
 
 	// Proxy main route
@@ -47,6 +50,7 @@ func main() {
 		// Make reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
+				// Pretent that the referrer is its homepage!
 				req.Header.Set("Referer", target.Scheme+"://"+target.Host+"/")
 				req.Header.Set("Origin", target.Host)
 				req.Host = target.Host
@@ -56,6 +60,8 @@ func main() {
 			},
 
 			ModifyResponse: func(response *http.Response) error {
+				response.Header.Set("Access-Control-Allow-Origin", "*")
+
 				// Handle redirection responses
 				if response.Header.Get("Location") != "" {
 					response.Header.Set("Location", proxyUrl+"/?"+response.Header.Get("Location"))
@@ -77,20 +83,10 @@ func main() {
 // Create an error response
 func displayError(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	_, err := w.Write([]byte(message))
 	if err != nil {
 		panic("Cannot respond to the request.")
 	}
-}
-
-// Create the favicon.ico
-func displayFavicon(w http.ResponseWriter) {
-	bytes, err := ioutil.ReadFile("resources/logo.png")
-	if err != nil {
-		_, _ = fmt.Fprintln(w, "")
-	}
-
-	w.Header().Set("Content-Type", "image/png")
-	_, _ = fmt.Fprintln(w, string(bytes))
 }

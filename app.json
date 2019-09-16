@@ -1,13 +1,11 @@
 {
-  "name": "OpenURL",
-  "description": "A simple web proxy that is able to load (stream) a single URL",
+  "name": "SingleFetch",
+  "description": "A simple web proxy that is able to fetch (stream) a single URL.",
   "keywords": [
-    "openurl",
-    "open",
-    "url",
-    "web-proxy",
-    "proxy"
+    "SingleFetch",
+    "Single",
+    "Fetch"
   ],
-  "website": "https://github.com/miladrahimi/openurl",
-  "repository": "https://github.com/miladrahimi/openurl"
+  "website": "https://github.com/miladrahimi/singlefetch",
+  "repository": "https://github.com/miladrahimi/singlefetch"
 }
