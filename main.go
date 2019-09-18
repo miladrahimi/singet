@@ -37,20 +37,13 @@ func main() {
 
 		target, err := url.Parse(query.Get("url"))
 		if err != nil || target.IsAbs() == false {
-			displayError(rw, "The requested URL is invalid.")
+			displayError(rw, "URL is invalid.")
 			return
 		}
 
 		// Make reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(r *http.Request) {
-				if referrer := query.Get("referrer"); referrer != "" {
-					r.Header.Set("Referer", referrer)
-				} else {
-					r.Header.Set("Referer", target.Scheme+"://"+target.Host+"/")
-				}
-
-				r.Header.Set("Origin", target.Host)
 				r.Host = target.Host
 				r.URL = target
 
@@ -65,7 +58,7 @@ func main() {
 					if query.Get("redirection") == "follow" {
 						r.Header.Set("Location", proxyUrl+"/?redirection=follow&url="+r.Header.Get("Location"))
 					} else if query.Get("redirection") == "stop" {
-						modifyResponseToRedirection(r, r.Header.Get("Location"))
+						displayLocation(r, r.Header.Get("Location"))
 					}
 				}
 
@@ -117,15 +110,15 @@ func displayError(rw http.ResponseWriter, error string) {
 
 	_, err = rw.Write(body)
 	if err != nil {
-		panic("Cannot respond to the request.")
+		panic("Cannot display the error.")
 	}
 }
 
-// modifyResponseToRedirection will modify the response to a location response
-func modifyResponseToRedirection(r *http.Response, location string) {
+// displayLocation will modify the response to a display location instead of redirecting
+func displayLocation(r *http.Response, location string) {
 	body, err := json.Marshal(map[string]string{"location": location})
 	if err != nil {
-		panic("Cannot respond to the request.")
+		panic("Cannot display the location.")
 	}
 
 	r.Body = ioutil.NopCloser(bytes.NewReader(body))
