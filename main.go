@@ -44,6 +44,10 @@ func main() {
 		// Make reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(r *http.Request) {
+				if r.Header.Get("referrer") == "" {
+					r.Header.Set("referrer", target.String())
+				}
+
 				r.Host = target.Host
 				r.URL = target
 
