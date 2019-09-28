@@ -46,6 +46,8 @@ func main() {
 			Director: func(r *http.Request) {
 				for name, value := range request.URL.Query() {
 					if name[0:2] == "h_" {
+						r.Header.Del(name[2:])
+
 						for _, v := range value {
 							r.Header.Set(name[2:], v)
 						}
