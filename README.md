@@ -14,7 +14,7 @@ After running the application, you can fetch a single url this way:
 For example:
 
 ```
-https://proxy.com/?https://url.com/video.mp4
+https://proxy.com/?url=https://url.com/video.mp4
 ```
 
 The proxy pass the request body and headers (http method, referrer, auth, etc.) to the requested url.
