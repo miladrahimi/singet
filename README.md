@@ -48,6 +48,14 @@ Date: ...
 {"location":"https://www.google.com/"}
 ```
 
+### HTTP Header Manipulation
+
+In default, SingleFetch passes the request headers without any change, but you may want to manipulate some headers like referer or any other header. In this case, you can pass the related header in the query string with the prefix `h_` like this example:
+
+```
+http://proxy.com/?url=https://google.com&h_referer=http://images.google.com
+```
+
 ## License
 SingleFetch is initially created by [Milad Rahimi](http://miladrahimi.com)
 and released under the [MIT License](http://opensource.org/licenses/mit-license.php).
