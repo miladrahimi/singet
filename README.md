@@ -46,7 +46,7 @@ With the `stop` value for the `redirection` parameter the behaviour is returning
 For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop`
 the response would be:
 
-```
+```http
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Content-Length: ...
