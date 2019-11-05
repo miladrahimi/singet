@@ -1,11 +1,10 @@
 # SingleFetch
-A simple web proxy that is able to fetch (stream) a single URL.
 
-It is written in Go language and ready to deploy on [Heroku](https://heroku.com).
+A simple web proxy that can fetch (or stream) a single URL. It is written in Go language and ready to deploy on [Heroku](https://heroku.com).
 
 ## How to use
 
-After running the application, you can fetch a single url this way:
+After running, you can fetch a single URL this way:
 
 ```
 [host]:[port]/?url=[url]
@@ -14,37 +13,30 @@ After running the application, you can fetch a single url this way:
 For example:
 
 ```
-https://proxy.com/?url=https://url.com/video.mp4
+https://domain.com/?url=https://url.com/video.mp4
 ```
 
-The proxy pass the request body and headers (http method, referrer, auth, etc.) to the requested url.
+The proxy passes the request body and headers (HTTP method, referrer, auth, etc.) to the requested URL.
 
 ### Redirection
 
-The requested url might return a http redirection response.
-In this case the proxy behave based on the `redirection` parameter.
+The requested URL might return an HTTP redirection response. In this case, the proxy behaves based on the `redirection` parameter or its default behavior when the parameter is not present. You can pass this parameter to the app this way:
 
 ```
 [host]:[port]/?url=[url]&redirection=[value]
 ```
 
 #### Default behaviour
-Without the `redirection` parameter the default behaviour is returning the response with no manipulation.
-For example, if the request was `http://proxy.com/?url=https://google.com`
-the response would be redirection to `https://www.google.com`.
-It might not be your expected result, because if you make this request on using your browser,
-it redirects you to the real Google address (`https://www.google.com`) with no proxy.
+
+The default behavior is returning the response with no manipulation. For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a redirection to `https://www.google.com`.
 
 #### follow
-With the `follow` value for the `redirection` parameter the behaviour is redirecting through the proxy.
-For example, if the request was `http://proxy.com/?url=https://google.com&redirection=follow`
-the response would be redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`.
-As you can see, if your client handle redirection it redirects you to the new url through the proxy.
+
+When `redirection` is `follow`, It will be redirected through the proxy. For example, if the request was `http://proxy.com/?url=https://google.com&redirection=follow` the response would be a redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`.
 
 #### stop
-With the `stop` value for the `redirection` parameter the behaviour is returning a JSON response contains location.
-For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop`
-the response would be:
+
+When `redirection` is `stop`, It returns a JSON response contains the taregt location. For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop` the response would be:
 
 ```http
 HTTP/1.1 200 OK
@@ -57,5 +49,5 @@ Date: ...
 ```
 
 ## License
-OpenURL is initially created by [Milad Rahimi](http://miladrahimi.com)
+SingleFetch is initially created by [Milad Rahimi](http://miladrahimi.com)
 and released under the [MIT License](http://opensource.org/licenses/mit-license.php).
