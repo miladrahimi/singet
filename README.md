@@ -1,6 +1,6 @@
 # SingleFetch
 
-A simple web proxy that can fetch (or stream) a single URL. It is written in Go language and ready to deploy on [Heroku](https://heroku.com).
+A simple web proxy that can fetch (or stream) a single URL. It is written in Go language.
 
 ## How to use
 
