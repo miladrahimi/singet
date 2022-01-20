@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  app:
+    build: ./
+    image: singlefetch
+    container_name: singlefetch
+    restart: always
+    ports:
+      - ${APP_EXPOSED_PORT:-0}:8080
