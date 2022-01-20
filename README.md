@@ -53,7 +53,7 @@ Date: ...
 In default, SingleFetch passes the request headers without any change, but you may want to manipulate some headers like referer or any other header. In this case, you can pass the related header in the query string with the prefix `h_` like this example:
 
 ```
-http://proxy.com/?url=https://google.com&h_referer=http://images.google.com
+http://proxy.com/?url=https://google.com&h__referer=http://images.google.com
 ```
 
 ## License

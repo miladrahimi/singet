@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	DefaultHost = "http://localhost"
+	DefaultHost = "http://0.0.0.0"
 	DefaultPort = "8080"
 )
 
@@ -41,15 +41,15 @@ func main() {
 			return
 		}
 
-		// Make reverse proxy
+		// Make a reverse proxy
 		proxy := &httputil.ReverseProxy{
 			Director: func(r *http.Request) {
 				for name, value := range request.URL.Query() {
-					if name[0:2] == "h_" {
-						r.Header.Del(name[2:])
+					if name[0:3] == "h__" {
+						r.Header.Del(name[3:])
 
 						for _, v := range value {
-							r.Header.Set(name[2:], v)
+							r.Header.Set(name[3:], v)
 						}
 					}
 				}
