@@ -19,6 +19,19 @@ https://domain.com/?url=https://url.com/video.mp4
 
 The proxy passes the request body and headers (HTTP method, referrer, auth, etc.) to the requested URL.
 
+### Base64 Encoding
+
+If you want to use this proxy on censored internet, you might need to encode URLs.
+To do so, you can use the `base64` parameter instead of `url` like this example:
+
+```
+// Using "url" parameter:
+https://domain.com/?url=https://miladrahimi.com
+
+// Using "base64" parameter:
+https://domain.com/?base64=aHR0cHM6Ly9taWxhZHJhaGltaS5jb20=
+```
+
 ### Redirection
 
 The requested URL might return an HTTP redirection response. In this case, the proxy behaves based on the `redirection` parameter or its default behavior when the parameter is not present. You can pass this parameter to the app this way:
