@@ -1,6 +1,7 @@
 # SingleFetch
 
-A simple web proxy that can fetch (or stream) a single URL. It is written in Go language.
+A simple web proxy that can fetch (or stream) a single URL.
+It is written in Go language.
 
 ## How to use
 
@@ -28,15 +29,20 @@ The requested URL might return an HTTP redirection response. In this case, the p
 
 #### Default behaviour
 
-The default behavior is returning the response with no manipulation. For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a redirection to `https://www.google.com`.
+The default behavior is returning the response with no manipulation.
+For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a redirection
+to `https://www.google.com`.
 
 #### follow
 
-When `redirection` is `follow`, It will be redirected through the proxy. For example, if the request was `http://proxy.com/?url=https://google.com&redirection=follow` the response would be a redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`.
+When `redirection` is `follow`, It will be redirected through the proxy.
+For example, if the request was `http://proxy.com/?url=https://google.com&redirection=follow` the response would be a
+redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`.
 
 #### stop
 
-When `redirection` is `stop`, It returns a JSON response contains the taregt location. For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop` the response would be:
+When `redirection` is `stop`, It returns a JSON response contains the target location.
+For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop` the response would be:
 
 ```http
 HTTP/1.1 200 OK
@@ -50,10 +56,12 @@ Date: ...
 
 ### HTTP Header Manipulation
 
-In default, SingleFetch passes the request headers without any change, but you may want to manipulate some headers like referer or any other header. In this case, you can pass the related header in the query string with the prefix `h__` like this example:
+In default, SingleFetch passes the request headers without any change, but you may want to manipulate some headers like
+referer or any other header.
+In this case, you can pass the related header in the query string with the prefix `h__` like this example:
 
 ```
-http://proxy.com/?url=https://google.com&h__referer=http://images.google.com
+https://proxy.com/?url=https://google.com&h__referer=https://images.google.com
 ```
 
 ## License
