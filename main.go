@@ -2,6 +2,7 @@ package main
 
 import (
     "bytes"
+    "encoding/base64"
     "encoding/json"
     "fmt"
     "io/ioutil"
@@ -30,24 +31,32 @@ func main() {
 
         query := request.URL.Query()
 
-        if query.Get("url") == "" {
+        var requestedUrl string
+        if query.Get("url") != "" {
+            requestedUrl = query.Get("url")
+        } else if query.Get("base64") != "" {
+            if u, err := base64.StdEncoding.DecodeString(query.Get("base64")); err != nil {
+                displayError(rw, "Invalid Base64-encoded URL.")
+                return
+            } else {
+                requestedUrl = string(u)
+            }
+        } else {
             displayError(rw, "Nothing requested.")
             return
         }
 
-        target, err := url.Parse(query.Get("url"))
+        target, err := url.Parse(requestedUrl)
         if err != nil || target.IsAbs() == false {
             displayError(rw, "URL is invalid.")
             return
         }
 
-        // Make a reverse proxy
         proxy := &httputil.ReverseProxy{
             Director: func(r *http.Request) {
                 for name, value := range request.URL.Query() {
                     if name[0:3] == "h__" {
                         r.Header.Del(name[3:])
-
                         for _, v := range value {
                             r.Header.Set(name[3:], v)
                         }
@@ -56,14 +65,11 @@ func main() {
 
                 r.Host = target.Host
                 r.URL = target
-
-                log.Println(r)
             },
 
             ModifyResponse: func(r *http.Response) error {
                 r.Header.Del("Access-Control-Allow-Origin")
 
-                // Handle redirection responses
                 if r.StatusCode >= 300 && r.StatusCode < 400 && r.Header.Get("Location") != "" {
                     if query.Get("redirection") == "follow" {
                         r.Header.Set("Location", proxyUrl+"/?redirection=follow&url="+r.Header.Get("Location"))

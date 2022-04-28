@@ -1,4 +1,4 @@
-FROM golang:1.17
+FROM ghcr.io/getimages/golang:1.18.0-bullseye
 
 # Set the Current Working Directory inside the container
 WORKDIR $GOPATH/src/github.com/miladrahimi/singlefetch
