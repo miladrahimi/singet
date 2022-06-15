@@ -1,6 +1,6 @@
 # SingleFetch
 
-A simple web proxy that can fetch (or stream) a single URL.
+A simple web proxy that can fetch (download or stream) a single URL.
 It is written in Go programming language.
 
 ## How to use
