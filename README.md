@@ -1,7 +1,7 @@
 # SingleFetch
 
 A simple web proxy that can fetch (or stream) a single URL.
-It is written in Go language.
+It is written in Go programming language.
 
 ## How to use
 
@@ -14,7 +14,7 @@ After running, you can fetch a single URL this way:
 For example:
 
 ```
-https://domain.com/?url=https://url.com/video.mp4
+https://domain.com/?url=https://target.com/video.mp4
 ```
 
 The proxy passes the request body and headers (HTTP method, referrer, auth, etc.) to the requested URL.
@@ -34,16 +34,18 @@ https://domain.com/?base64=aHR0cHM6Ly9taWxhZHJhaGltaS5jb20=
 
 ### Redirection
 
-The requested URL might return an HTTP redirection response. In this case, the proxy behaves based on the `redirection` parameter or its default behavior when the parameter is not present. You can pass this parameter to the app this way:
+The requested URL might return an HTTP redirection response.
+In this case, the proxy behaves based on the `redirection` parameter or its default behavior when the parameter is not present.
+You can pass this parameter to the app this way:
 
 ```
 [host]:[port]/?url=[url]&redirection=[value]
 ```
 
-#### Default behaviour
+#### Default
 
 The default behavior is returning the response with no manipulation.
-For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a redirection
+For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a standard redirection
 to `https://www.google.com`.
 
 #### follow
@@ -69,12 +71,12 @@ Date: ...
 
 ### HTTP Header Manipulation
 
-In default, SingleFetch passes the request headers without any change, but you may want to manipulate some headers like
-referer or any other header.
+In default, SingleFetch passes the request headers without any change,
+but you may want to manipulate some headers like referer or any other HTTP header.
 In this case, you can pass the related header in the query string with the prefix `h__` like this example:
 
 ```
-https://proxy.com/?url=https://google.com&h__referer=https://images.google.com
+https://proxy.com/?url=https://www.google.com&h__referer=https://images.google.com
 ```
 
 ## License
