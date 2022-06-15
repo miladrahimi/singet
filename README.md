@@ -59,7 +59,7 @@ redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`
 When `redirection` is `stop`, It returns a JSON response contains the target location.
 For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop` the response would be:
 
-```http
+```
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Content-Length: ...
