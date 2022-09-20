@@ -5,7 +5,7 @@ import (
     "encoding/base64"
     "encoding/json"
     "fmt"
-    "io/ioutil"
+    "io"
     "log"
     "net/http"
     "net/http/httputil"
@@ -27,11 +27,19 @@ func main() {
     })
 
     http.HandleFunc("/", func(rw http.ResponseWriter, request *http.Request) {
+        // Setup CORS
         rw.Header().Set("Access-Control-Allow-Origin", "*")
 
-        query := request.URL.Query()
+        // Handle OPTIONS Request
+        if request.Method == "OPTIONS" {
+            rw.WriteHeader(204)
+            return
+        }
 
         var requestedUrl string
+
+        // Receive requested URL
+        query := request.URL.Query()
         if query.Get("url") != "" {
             requestedUrl = query.Get("url")
         } else if query.Get("base64") != "" {
@@ -46,14 +54,17 @@ func main() {
             return
         }
 
+        // Validate the requested URL
         target, err := url.Parse(requestedUrl)
         if err != nil || target.IsAbs() == false {
             displayError(rw, "URL is invalid.")
             return
         }
 
+        // Setup Proxy
         proxy := &httputil.ReverseProxy{
             Director: func(r *http.Request) {
+                // Manipulate headers using h__ parameters
                 for name, value := range request.URL.Query() {
                     if name[0:3] == "h__" {
                         r.Header.Del(name[3:])
@@ -72,7 +83,10 @@ func main() {
 
                 if r.StatusCode >= 300 && r.StatusCode < 400 && r.Header.Get("Location") != "" {
                     if query.Get("redirection") == "follow" {
-                        r.Header.Set("Location", proxyUrl+"/?redirection=follow&url="+r.Header.Get("Location"))
+                        r.Header.Set(
+                            "Location",
+                            proxyUrl+"/?redirection=follow&url="+r.Header.Get("Location"),
+                        )
                     } else if query.Get("redirection") == "stop" {
                         displayLocation(r, r.Header.Get("Location"))
                     }
@@ -82,6 +96,7 @@ func main() {
             },
         }
 
+        // Serve Proxy
         proxy.ServeHTTP(rw, request)
     })
 
@@ -89,7 +104,7 @@ func main() {
     log.Fatal(http.ListenAndServe(":"+port(), nil))
 }
 
-// host will return the proxy host
+// host returns the proxy host
 func host() string {
     if host := os.Getenv("HOST"); host == "" {
         return DefaultHost
@@ -98,7 +113,7 @@ func host() string {
     }
 }
 
-// port will return the proxy port
+// port returns the proxy port
 func port() string {
     if port := os.Getenv("PORT"); port == "" {
         return DefaultPort
@@ -107,9 +122,9 @@ func port() string {
     }
 }
 
-// favicon will return the favicon icon
+// favicon returns the favicon icon
 func favicon(rw http.ResponseWriter) {
-    content, _ := ioutil.ReadFile("favicon.ico")
+    content, _ := os.ReadFile("favicon.ico")
     rw.Header().Set("Content-Type", "image/x-icon")
     _, _ = fmt.Fprintln(rw, string(content))
 }
@@ -121,12 +136,12 @@ func displayError(rw http.ResponseWriter, error string) {
 
     body, err := json.Marshal(map[string]string{"error": error})
     if err != nil {
-        panic("Cannot generate the JSON.")
+        panic("Cannot generate the error JSON body.")
     }
 
     _, err = rw.Write(body)
     if err != nil {
-        panic("Cannot display the error.")
+        panic("Cannot write the error into the http response.")
     }
 }
 
@@ -134,10 +149,10 @@ func displayError(rw http.ResponseWriter, error string) {
 func displayLocation(r *http.Response, location string) {
     body, err := json.Marshal(map[string]string{"location": location})
     if err != nil {
-        panic("Cannot display the location.")
+        panic("Cannot generate the location JSON body.")
     }
 
-    r.Body = ioutil.NopCloser(bytes.NewReader(body))
+    r.Body = io.NopCloser(bytes.NewReader(body))
     r.ContentLength = int64(len(body))
     r.StatusCode = http.StatusOK
     r.Header = http.Header{}
