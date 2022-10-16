@@ -1,7 +1,8 @@
 # Singet
 
-A simple web proxy that can fetch (download or stream) a single URL.
-It is written in Go programming language.
+Singet means single get.
+It's a simple web proxy to fetch (download or stream) a single URL.
+It's written in the Go programming language.
 
 ## How to use
 
