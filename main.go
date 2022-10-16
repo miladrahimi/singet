@@ -153,10 +153,10 @@ func handleProxy(rw http.ResponseWriter, request *http.Request) {
             r.Header.Set("Access-Control-Allow-Origin", "*")
 
             if r.Header.Get("Location") != "" {
-                if query.Get("redirection") == "stop" {
+                if query.Get("r") == "follow" {
+                    r.Header.Set("Location", address()+"/?r=follow&url="+r.Header.Get("Location"))
+                } else if query.Get("r") == "stop" {
                     displayLocation(r, r.Header.Get("Location"))
-                } else {
-                    r.Header.Set("Location", address()+"/?url="+r.Header.Get("Location"))
                 }
             }
 
