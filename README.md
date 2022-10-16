@@ -45,19 +45,19 @@ You can set this parameter this way:
 
 #### Default
 
-When `r` is `default` or missing, It will return the response without manipulation.
+When `r` is `default` or missing, It returns the response without manipulation.
 For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a standard redirection
 to `https://www.google.com`.
 
 #### Follow
 
-When `r` is `follow`, It will redirect through the proxy.
+When `r` is `follow`, It redirects through the proxy.
 For example, if the request was `http://proxy.com/?r=follow&url=https://google.com` the response would be a
 redirection to `http://proxy.com/?r=follow&url=https://www.google.com`.
 
 #### Stop
 
-When `redirection` is `stop`, It returns a JSON response contains the new location.
+When `r` is `stop`, It returns a JSON response contains the new location.
 For example, if the request was `http://proxy.com/?r=stop&url=https://google.com` the response would be:
 
 ```
