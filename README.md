@@ -37,7 +37,7 @@ https://domain.com/?base64=aHR0cHM6Ly9taWxhZHJhaGltaS5jb20=
 
 The requested URL might return an HTTP redirection response.
 In this case, the proxy behaves based on the `r` parameter or its default behavior when the parameter is not present.
-You can pass this parameter to Singet this way:
+You can set this parameter this way:
 
 ```
 [host]:[port]/?url=[url]&r=[value]
