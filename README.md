@@ -51,7 +51,7 @@ to `https://www.google.com`.
 
 #### Follow
 
-When `r` is `follow`, It be redirect through the proxy.
+When `r` is `follow`, It will redirect through the proxy.
 For example, if the request was `http://proxy.com/?r=follow&url=https://google.com` the response would be a
 redirection to `http://proxy.com/?r=follow&url=https://www.google.com`.
 
