@@ -62,10 +62,8 @@ For example, if the request was `http://proxy.com/?r=stop&url=https://google.com
 
 ```
 HTTP/1.1 200 OK
-Access-Control-Allow-Origin: *
-Content-Length: ...
 Content-Type: application/json
-Date: ...
+...
 
 {"location":"https://www.google.com/"}
 ```
