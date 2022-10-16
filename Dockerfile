@@ -1,7 +1,7 @@
 FROM ghcr.io/getimages/golang:1.19.1-bullseye
 
 # Set the Current Working Directory inside the container
-WORKDIR $GOPATH/src/github.com/miladrahimi/singlefetch
+WORKDIR $GOPATH/src/github.com/miladrahimi/singet
 
 # Copy everything from the current directory to the PWD inside the container
 COPY . .
@@ -16,4 +16,4 @@ RUN go install -v ./...
 EXPOSE 8080
 
 # Run the executable
-CMD ["singlefetch"]
+CMD ["singet"]

@@ -1,3 +1,3 @@
-module github.com/miladrahimi/singlefetch
+module github.com/miladrahimi/singet
 
 go 1.19

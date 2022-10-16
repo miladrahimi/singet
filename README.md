@@ -1,4 +1,4 @@
-# SingleFetch
+# Singet
 
 A simple web proxy that can fetch (download or stream) a single URL.
 It is written in Go programming language.
@@ -71,7 +71,7 @@ Date: ...
 
 ### HTTP Header Manipulation
 
-In default, SingleFetch passes the request headers without any change,
+In default, Singet passes the request headers without any change,
 but you may want to manipulate some headers like referer or any other HTTP header.
 In this case, you can pass the related header in the query string with the prefix `h__` like this example:
 
@@ -80,5 +80,5 @@ https://proxy.com/?url=https://www.google.com&h__referer=https://images.google.c
 ```
 
 ## License
-SingleFetch is initially created by [Milad Rahimi](http://miladrahimi.com)
+Singet is initially created by [Milad Rahimi](http://miladrahimi.com)
 and released under the [MIT License](http://opensource.org/licenses/mit-license.php).
