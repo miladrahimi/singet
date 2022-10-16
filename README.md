@@ -35,29 +35,29 @@ https://domain.com/?base64=aHR0cHM6Ly9taWxhZHJhaGltaS5jb20=
 ### Redirection
 
 The requested URL might return an HTTP redirection response.
-In this case, the proxy behaves based on the `redirection` parameter or its default behavior when the parameter is not present.
-You can pass this parameter to the app this way:
+In this case, the proxy behaves based on the `r` parameter or its default behavior when the parameter is not present.
+You can pass this parameter to Singet this way:
 
 ```
-[host]:[port]/?url=[url]&redirection=[value]
+[host]:[port]/?url=[url]&r=[value]
 ```
 
 #### Default
 
-The default behavior is returning the response with no manipulation.
+When `r` is `default` or missing, It will return the response without manipulation.
 For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a standard redirection
 to `https://www.google.com`.
 
-#### follow
+#### Follow
 
-When `redirection` is `follow`, It will be redirected through the proxy.
-For example, if the request was `http://proxy.com/?url=https://google.com&redirection=follow` the response would be a
-redirection to `http://proxy.com/?url=https://www.google.com&redirection=follow`.
+When `r` is `follow`, It be redirect through the proxy.
+For example, if the request was `http://proxy.com/?r=follow&url=https://google.com` the response would be a
+redirection to `http://proxy.com/?r=follow&url=https://www.google.com`.
 
-#### stop
+#### Stop
 
-When `redirection` is `stop`, It returns a JSON response contains the target location.
-For example, if the request was `http://proxy.com/?url=https://google.com&redirection=stop` the response would be:
+When `redirection` is `stop`, It returns a JSON response contains the new location.
+For example, if the request was `http://proxy.com/?r=stop&url=https://google.com` the response would be:
 
 ```
 HTTP/1.1 200 OK
@@ -71,13 +71,15 @@ Date: ...
 
 ### HTTP Header Manipulation
 
-In default, Singet passes the request headers without any change,
-but you may want to manipulate some headers like referer or any other HTTP header.
-In this case, you can pass the related header in the query string with the prefix `h__` like this example:
+By default, Singet passes the request headers without any change.
+You may want to manipulate some HTTP headers.
+In this case, you can pass the related header in the query string with the prefix `h__` like in the example below.
 
 ```
 https://proxy.com/?url=https://www.google.com&h__referer=https://images.google.com
 ```
+
+It will set the `REFERER` header to `https://images.google.com`.
 
 ## License
 Singet is initially created by [Milad Rahimi](http://miladrahimi.com)
