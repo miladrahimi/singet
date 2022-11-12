@@ -1,7 +1,7 @@
 # Singet
 
 Singet means single get.
-It's a simple web proxy to fetch (get, download or stream) a single URL.
+It's a simple web proxy to fetch (get, download, or stream) a single URL.
 It's written in the Go programming language.
 
 ## How to use
@@ -22,8 +22,8 @@ The proxy passes the request body and headers (HTTP method, referrer, auth, etc.
 
 ### Base64 Encoding
 
-If you want to use this proxy on censored internet, you might need to encode URLs.
-To do so, you can use the `base64` parameter instead of `url` like this example:
+If you want to use this proxy on a censored network, you might need to encode URLs.
+To do so, you can use the `base64` parameter instead of the `url` like in this example:
 
 ```
 // Using "url" parameter:
@@ -45,19 +45,19 @@ You can set this parameter this way:
 
 #### Default
 
-When `r` is `default` or missing, It returns the response without manipulation.
+When `r` parameter is `default` or missing, it returns the response without manipulation.
 For example, if the request was `http://proxy.com/?url=https://google.com` the response would be a standard redirection
 to `https://www.google.com`.
 
 #### Follow
 
-When `r` is `follow`, It redirects through the proxy.
+When `r` parameter is `follow`, it redirects through the proxy.
 For example, if the request was `http://proxy.com/?r=follow&url=https://google.com` the response would be a
 redirection to `http://proxy.com/?r=follow&url=https://www.google.com`.
 
 #### Stop
 
-When `r` is `stop`, It returns a JSON response contains the new location.
+When `r` parameter is `stop`, it returns a JSON response contains the new location.
 For example, if the request was `http://proxy.com/?r=stop&url=https://google.com` the response would be:
 
 ```
