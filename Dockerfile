@@ -1,19 +1,26 @@
-FROM ghcr.io/getimages/golang:1.19.1-bullseye
+# syntax=docker/dockerfile:1
 
-# Set the Current Working Directory inside the container
-WORKDIR $GOPATH/src/github.com/miladrahimi/singet
+## Build
+FROM golang:1.21.7-bookworm AS build
 
-# Copy everything from the current directory to the PWD inside the container
+WORKDIR /app
+
 COPY . .
 
-# Download all the dependencies
-RUN go get -d -v ./...
+COPY . .
+RUN go mod tidy
+RUN go build -o signet
 
-# Install the package
-RUN go install -v ./...
+## Deploy
+FROM debian:bookworm-slim
 
-# This container exposes port 8080 to the outside world
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+RUN update-ca-certificates
+
+WORKDIR /app
+
+COPY --from=build /app/signet signet
+
 EXPOSE 8080
 
-# Run the executable
-CMD ["singet"]
+ENTRYPOINT ["./signet"]
