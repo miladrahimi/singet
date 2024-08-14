@@ -1,10 +1,8 @@
-version: '3'
-
 services:
   app:
-    build: ./
-    image: singet
-    container_name: singet
+    build:
+      context: .
+    image: ghcr.io/miladrahimi/singet:latest
     restart: always
     environment:
       - URL=${APP_URL}
